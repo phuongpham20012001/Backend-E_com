@@ -20,10 +20,8 @@ const createSendToken = (user, statusCode, res) => {
   };
 
   res.cookie("jwt", token, cookieOptions);
-
   // Remove password from output
   user.password = undefined;
-
   res.status(statusCode).json({
     status: "success",
     token,
@@ -39,7 +37,7 @@ exports.signup = async (req, res, next) => {
       email: req.body.email,
       password: req.body.password,
       passwordConfirm: req.body.passwordConfirm,
-      passwordChangedAt: req.body.passwordChangedAt,
+      passwordChangedAt: new Date(),
     });
     createSendToken(newUser, 201, res);
   } catch (err) {

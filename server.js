@@ -12,7 +12,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const userRouters = require("./routes/userRouters");
 const hpp = require("hpp");
 
-app.use(cors());
+app.use(cors())
 // secure Http headers
 app.use(helmet());
 // read request body
@@ -58,7 +58,7 @@ app.all("*", (req, res, next) => {
   next(err);
 });
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 8001 ;
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
