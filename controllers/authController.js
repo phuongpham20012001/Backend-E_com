@@ -132,9 +132,8 @@ exports.forgotPassword = async (req, res, next) => {
     await user.save({ validateBeforeSave: false });
 
     // send it to user's email
-    const resetURL = `${req.protocol}://${req.get(
-      "host"
-    )}/resetPassword/${resetToken}`;
+    // change the link to URL of front end
+    const resetURL = `http://localhost:3000/resetPassword/${resetToken}`;
 
     const message = `Your link to reset password, ${resetURL}`;
     try {
@@ -168,9 +167,6 @@ exports.resetPassword = async (req, res, next) => {
       passwordResetToken: hashedToken,
       passwordResetExpires: { $gt: Date.now() },
     });
-    console.log(req.params.token)
-    console.log(hashedToken)
-    console.log(user)
     //if the token is valid and user still exists then set the new password
     if (!user) {
       return res.status(400).json({ message: "token is invalid" });
