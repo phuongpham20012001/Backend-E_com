@@ -136,7 +136,7 @@ exports.forgotPassword = async (req, res, next) => {
       "host"
     )}/resetPassword/${resetToken}`;
 
-    const message = `Your link to reset password, ${resetURL}.`;
+    const message = `Your link to reset password, ${resetURL}`;
     try {
       await sendEmail({
         email: user.email,
@@ -168,10 +168,12 @@ exports.resetPassword = async (req, res, next) => {
       passwordResetToken: hashedToken,
       passwordResetExpires: { $gt: Date.now() },
     });
-
+    console.log(req.params.token)
+    console.log(hashedToken)
+    console.log(user)
     //if the token is valid and user still exists then set the new password
     if (!user) {
-      res.status(400).json({ message: "token is invalid" });
+      return res.status(400).json({ message: "token is invalid" });
     }
     (user.password = req.body.password),
       (user.passwordConfirm = req.body.passwordConfirm),
@@ -189,7 +191,7 @@ exports.updatePassword = async (req, res, next) => {
     const user = await User.findById(req.user.id).select("+password");
     // check if posted current password is correct
     if (
-      !(await user.correctPassword(req.body.paaswordCurrent, user.password))
+      !(await user.correctPassword(req.body.passwordCurrent, user.password))
     ) {
       return res.status(401).json({ message: "your password is incorrect" });
     }
