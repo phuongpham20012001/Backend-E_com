@@ -2,10 +2,20 @@ const authController = require("./../controllers/authController.js");
 const userController = require("./../controllers/userController.js");
 const express = require("express");
 const router = express.Router();
+const productController = require("./../controllers/productController.js");
+const orderController = require("./../controllers/orderController.js");
 //authController
 router.route("/signup").post(authController.signup);
 router.route("/login").post(authController.login);
-
+router
+  .route("/order")
+  .get(orderController.viewOrder)
+  .post(
+    authController.protect,
+    authController.restrictTo("user"),
+    orderController.createOrder
+  );
+router.route("/product").get(productController.product);
 router
   .route("/updatePassword")
   .patch(
@@ -23,18 +33,14 @@ router
     authController.restrictTo("user"),
     userController.userData
   );
-  router
-  .route("/updateMe")
-  .patch(
-    authController.protect,
-    
-    userController.updateMe
-  );
-  router
-  .route("/deleteMe")
-  .get(
-    authController.protect,
-    
-    userController.deleteMe
-  );
+router.route("/updateMe").patch(
+  authController.protect,
+
+  userController.updateMe
+);
+router.route("/deleteMe").get(
+  authController.protect,
+
+  userController.deleteMe
+);
 module.exports = router;

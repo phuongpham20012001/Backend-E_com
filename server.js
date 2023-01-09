@@ -11,8 +11,8 @@ const xss = require("xss-clean");
 const mongoSanitize = require("express-mongo-sanitize");
 const userRouters = require("./routes/userRouters");
 const hpp = require("hpp");
-
-app.use(cors())
+const adminRouters = require("./routes/adminRouters");
+app.use(cors());
 // secure Http headers
 app.use(helmet());
 // read request body
@@ -48,6 +48,7 @@ app.use(mongoSanitize());
 app.use(xss());
 // using routes
 app.use("/", userRouters);
+app.use("/admin", adminRouters);
 // prevent parameter pollution
 app.use(hpp());
 // handle un unhanlded routes
@@ -58,7 +59,7 @@ app.all("*", (req, res, next) => {
   next(err);
 });
 
-const port = process.env.PORT || 8001 ;
+const port = process.env.PORT || 8001;
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
