@@ -46,14 +46,34 @@ exports.updateOrderStatus = async (req, res) => {
     res.status(500).json(err.message);
   }
 };
-exports.deleteOrder = async (req, res) => {
-    try {
-      await order.findByIdAndDelete(req.body.id);
+// have not tested
+exports.orderStatus = async (req, res) => {
+  try {
+    const data = await order.findOne(
+      { _id: req.body.id },
+      { projection: { status: 1 } }
+    );
+    if (data.length > 0) {
       res.status(200).json({
         status: "success",
       });
-    } catch (err) {
-      res.status(500).json({ message: err.message });
+    } else {
+      res.status(200).json({
+        status: "success",
+        message: "Do not have any orders status available",
+      });
     }
-  };
-  
+  } catch (e) {
+    res.status(500).json(err.message);
+  }
+};
+exports.deleteOrder = async (req, res) => {
+  try {
+    await order.findByIdAndDelete(req.body.id);
+    res.status(200).json({
+      status: "success",
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

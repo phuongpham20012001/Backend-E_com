@@ -2,20 +2,10 @@ const authController = require("./../controllers/authController.js");
 const userController = require("./../controllers/userController.js");
 const express = require("express");
 const router = express.Router();
-const productController = require("./../controllers/productController.js");
-const orderController = require("./../controllers/orderController.js");
 //authController
 router.route("/signup").post(authController.signup);
 router.route("/login").post(authController.login);
-router
-  .route("/order")
-  .get(orderController.viewOrder)
-  .post(
-    authController.protect,
-    authController.restrictTo("user"),
-    orderController.createOrder
-  );
-router.route("/product").get(productController.product);
+// update password
 router
   .route("/updatePassword")
   .patch(
@@ -23,9 +13,10 @@ router
     authController.restrictTo("user"),
     authController.updatePassword
   );
+// reset by password by email
 router.route("/forgotPassword").post(authController.forgotPassword);
 router.route("/resetPassword/:token").patch(authController.resetPassword);
-// userController
+// user infor and update
 router
   .route("/user")
   .get(

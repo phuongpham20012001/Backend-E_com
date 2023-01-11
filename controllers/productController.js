@@ -1,4 +1,5 @@
 const product = require("./../models/productModel");
+const cloudinary = require("./../ulti/cloudinary");
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
   Object.keys(obj).forEach((el) => {
@@ -10,7 +11,7 @@ exports.product = async (req, res) => {
   try {
     const data = await product.find();
     // SEND RESPONSE
-    if (data.length>0) {
+    if (data.length > 0) {
       res.status(200).json({
         status: "success",
         data,
@@ -27,24 +28,31 @@ exports.product = async (req, res) => {
 };
 exports.createProduct = async (req, res) => {
   try {
+    console.log(req.body)
     await product.create({
       name: req.body.name,
       price: req.body.price,
       description: req.body.description,
+      image: req.file.path,
     });
     res.status(200).json({
       status: "success",
     });
   } catch (e) {
-    res.status(500).json(err.message);
+    res.status(500).json(e.message);
   }
 };
 exports.updateProduct = async (req, res) => {
   try {
-    const filteredBody = filterObj(req.body, "name", "price", "description");
+    
     const updatedProduct = await product.findByIdAndUpdate(
       req.body.id,
-      filteredBody,
+      {
+        name : req.body.name,
+        price : req.body.price,
+        description : req.body.description,
+        image : req.file.path
+      },
       {
         new: true,
         runValidators: true,

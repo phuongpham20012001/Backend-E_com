@@ -12,13 +12,8 @@ const mongoSanitize = require("express-mongo-sanitize");
 const userRouters = require("./routes/userRouters");
 const hpp = require("hpp");
 const adminRouters = require("./routes/adminRouters");
-app.use(cors());
-// secure Http headers
-app.use(helmet());
-// read request body
-app.use(bodyParser.json({ limit: "10kb" }));
-app.use(express.urlencoded({ extended: false }));
-
+const orderRouters = require("./routes/orderRouters");
+const productRouters = require("./routes/productRouters");
 // MgDb connect
 const DB = process.env.DATABASE.replace(
   "<password>",
@@ -32,6 +27,20 @@ mongoose
   .then(() => {
     console.log("DB connected");
   });
+//MIDDLEWARE
+app.use(cors());
+app.use(helmet());
+app.use(bodyParser.json({limit: '100mb'}));
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  limit: '100mb',
+  extended: true
+  }));
+// data sanitization against NoSql query injection
+app.use(mongoSanitize());
+app.use(xss());
+app.use(express.urlencoded({ extended: false }));
+// prevent parameter pollution
+app.use(hpp());
 // limit requests
 const limiter = rateLimit({
   max: 100,
@@ -43,14 +52,12 @@ app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
-// data sanitization against NoSql query injection
-app.use(mongoSanitize());
-app.use(xss());
-// using routes
+
+// ROUTES MIDDLEWARE
 app.use("/", userRouters);
-app.use("/admin", adminRouters);
-// prevent parameter pollution
-app.use(hpp());
+app.use("/", adminRouters);
+app.use("/", orderRouters);
+app.use("/", productRouters);
 // handle un unhanlded routes
 app.all("*", (req, res, next) => {
   const err = new Error(`Can't find ${req.originalUrl} on this server`);
