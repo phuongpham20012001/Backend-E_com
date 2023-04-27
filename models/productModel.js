@@ -16,7 +16,7 @@ description: {
 },
 
 price: {
-    type: Number,
+    type: Number, 
     trim: true,
     required : [true, 'Product must have a price'],
     maxlength: 32

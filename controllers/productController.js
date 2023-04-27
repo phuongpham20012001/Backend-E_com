@@ -1,12 +1,4 @@
 const product = require("./../models/productModel");
-const cloudinary = require("./../ulti/cloudinary");
-const filterObj = (obj, ...allowedFields) => {
-  const newObj = {};
-  Object.keys(obj).forEach((el) => {
-    if (allowedFields.includes(el)) newObj[el] = obj[el];
-  });
-  return newObj;
-};
 exports.product = async (req, res) => {
   try {
     const data = await product.find();
@@ -28,7 +20,6 @@ exports.product = async (req, res) => {
 };
 exports.createProduct = async (req, res) => {
   try {
-    console.log(req.body)
     await product.create({
       name: req.body.name,
       price: req.body.price,

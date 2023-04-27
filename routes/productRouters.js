@@ -7,23 +7,22 @@ const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  allowedFormats:  ['png', 'jpg', 'jpeg'],
-
+  allowedFormats: ["png", "jpg", "jpeg"],
 });
-var parser = multer({storage} )
+var parser = multer({ storage });
 router
   .route("/product")
   .get(productController.product)
   .post(
     authController.protect,
     authController.restrictTo("admin"),
-    parser.single('image'),
+    parser.single("image"),
     productController.createProduct
   )
   .patch(
     authController.protect,
     authController.restrictTo("admin"),
-    parser.single('image'),
+    parser.single("image"),
     productController.updateProduct
   )
   .delete(
