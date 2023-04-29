@@ -24,6 +24,7 @@ router
     authController.restrictTo("user"),
     userController.userData
   );
+router.route ("/role").get(authController.protect,authController.role)
 router.route("/updateMe").patch(
   authController.protect,
 

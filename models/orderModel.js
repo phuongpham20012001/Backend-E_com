@@ -9,15 +9,12 @@ const OrderSchema = new Schema({
     type: "number",
     required: true,
   },
-  items: [
-    {
-      productId: { type: String, required: true },
-      name: { type: String, required: true },
-      quantity: { type: Number, required: true },
-      price: { type: Number, required: true },
-    },
-  ],
-  status: { type: String, required: true },
+  items: {
+    type: Map,
+    of: Number,
+    required: true,
+  },
+  status:  {type: String},
 });
 const OrderModel = mongoose.model("order", OrderSchema);
 

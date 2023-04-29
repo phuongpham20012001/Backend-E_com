@@ -19,12 +19,7 @@ router
     parser.single("image"),
     productController.createProduct
   )
-  .patch(
-    authController.protect,
-    authController.restrictTo("admin"),
-    parser.single("image"),
-    productController.updateProduct
-  )
+  
   .delete(
     authController.protect,
     authController.restrictTo("admin"),

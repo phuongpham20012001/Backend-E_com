@@ -201,3 +201,23 @@ exports.updatePassword = async (req, res, next) => {
     res.status(500).json({ message: err.message });
   }
 };
+exports.role = async function (req, res) {
+  try {
+    const data = await User.findById(req.user._id);
+    const role = data.role
+    // SEND RESPONSE
+    if (data) {
+      res.status(200).json({
+        status: "success",
+        role,
+      });
+    } else {
+      res.status(200).json({
+        status: "success",
+        message: "Nothing",
+      });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

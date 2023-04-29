@@ -33,30 +33,6 @@ exports.createProduct = async (req, res) => {
     res.status(500).json(e.message);
   }
 };
-exports.updateProduct = async (req, res) => {
-  try {
-    
-    const updatedProduct = await product.findByIdAndUpdate(
-      req.body.id,
-      {
-        name : req.body.name,
-        price : req.body.price,
-        description : req.body.description,
-        image : req.file.path
-      },
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
-    res.status(200).json({
-      status: "success",
-      updatedProduct,
-    });
-  } catch (e) {
-    res.status(500).json(err.message);
-  }
-};
 exports.deleteProduct = async (req, res) => {
   try {
     await product.findByIdAndDelete(req.body.id);

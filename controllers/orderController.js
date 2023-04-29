@@ -21,15 +21,16 @@ exports.viewOrder = async (req, res) => {
 exports.createOrder = async (req, res) => {
   try {
     await order.create({
-      customerId: req.body.customerId,
+      customerId: req.user._id,
       totalAmount: req.body.totalAmount,
       items: req.body.items,
-      status: req.body.status,
+      status: "Pending"
+      
     });
     res.status(200).json({
       status: "success",
     });
-  } catch (e) {
+  } catch (err) {
     res.status(500).json(err.message);
   }
 };
