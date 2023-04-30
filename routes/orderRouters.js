@@ -3,12 +3,17 @@ const express = require("express");
 const router = express.Router();
 const orderController = require("./../controllers/orderController.js");
 router
-  .route("/orderadmin")
-  .get(orderController.viewOrder)
+  .route("/order")
+  .get(
+    authController.protect,
+    authController.restrictTo("user"),
+    orderController.viewOrder
+  )
   .post(
     authController.protect,
-    authController.restrictTo("admin"),
-    orderController.createOrder)
+    authController.restrictTo("user"),
+    orderController.createOrder
+  )
   .patch(
     authController.protect,
     authController.restrictTo("admin"),
