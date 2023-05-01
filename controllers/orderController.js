@@ -1,8 +1,38 @@
 const order = require("./../models/orderModel");
+const products = require("./../models/productModel");
 exports.viewOrder = async (req, res) => {
   try {
     const data = await order.find({ customerId: req.user._id });
-    console.log(req.user._id);
+    for (const order of data) {
+      const itemId = Array.from(order.items.keys());
+      console.log(itemId);
+      // const data2 = await products.find({ _id: itemId });
+      // for (const product of data2) {
+      //   console.log(`Name: ${product.name}`);
+      //   console.log(`Image Link: ${product.image}`);
+      // }
+  
+    }
+
+    // SEND RESPONSE
+    if (data.length > 0) {
+      res.status(200).json({
+        status: "success",
+        data
+      });
+    } else {
+      res.status(200).json({
+        status: "success",
+        message: "Do not have any orders available",
+      });
+    }
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+};
+exports.viewOrderAdmin = async (req, res) => {
+  try {
+    const data = await order.find();
     // SEND RESPONSE
     if (data.length > 0) {
       res.status(200).json({
@@ -16,28 +46,9 @@ exports.viewOrder = async (req, res) => {
       });
     }
   } catch (err) {
-    res.status(500).json(err.message);
+    res.status(500).json({ err });
   }
 };
-// exports.viewOrder = async (req, res) => {
-//   try {
-//     const data = await order.find();
-//     // SEND RESPONSE
-//     if (data.length > 0) {
-//       res.status(200).json({
-//         status: "success",
-//         data,
-//       });
-//     } else {
-//       res.status(200).json({
-//         status: "success",
-//         message: "Do not have any orders available",
-//       });
-//     }
-//   } catch (err) {
-//     res.status(500).json({ err });
-//   }
-// };
 exports.createOrder = async (req, res) => {
   try {
     await order.create({

@@ -1,12 +1,14 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
 const OrderSchema = new Schema({
   customerId: {
-    type: "string",
+    type: Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
   totalAmount: {
-    type: "number",
+    type: Number,
     required: true,
   },
   items: {
@@ -14,8 +16,11 @@ const OrderSchema = new Schema({
     of: Number,
     required: true,
   },
-  status:  {type: String},
+  status: {
+    type: String,
+    default: "Pending",
+  },
 });
-const OrderModel = mongoose.model("order", OrderSchema);
 
+const OrderModel = mongoose.model("Order", OrderSchema);
 module.exports = OrderModel;

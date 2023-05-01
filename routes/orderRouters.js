@@ -2,6 +2,11 @@ const authController = require("./../controllers/authController.js");
 const express = require("express");
 const router = express.Router();
 const orderController = require("./../controllers/orderController.js");
+router.route("/orderadmin") .get(
+  authController.protect,
+  authController.restrictTo("admin"),
+  orderController.viewOrderAdmin
+);
 router
   .route("/order")
   .get(
