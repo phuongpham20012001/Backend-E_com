@@ -29,11 +29,5 @@ router
     authController.restrictTo("admin"),
     orderController.deleteOrder
   );
-router
-  .route("/order/status")
-  .get(
-    authController.protect,
-    authController.restrictTo("user"),
-    orderController.orderStatus
-  );
+
 module.exports = router;

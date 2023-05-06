@@ -1,24 +1,67 @@
 const order = require("./../models/orderModel");
-const products = require("./../models/productModel");
 exports.viewOrder = async (req, res) => {
   try {
-    const data = await order.find({ customerId: req.user._id });
-    for (const order of data) {
-      const itemId = Array.from(order.items.keys());
-      console.log(itemId);
-      // const data2 = await products.find({ _id: itemId });
-      // for (const product of data2) {
-      //   console.log(`Name: ${product.name}`);
-      //   console.log(`Image Link: ${product.image}`);
-      // }
-  
-    }
+    console.log(req.user._id)
+    const data = await order.aggregate([
+      { $match: { customerId: req.user._id } },
+      {
+        $project: {
+          _id: 0,
+          customerId: 1,
+          totalAmount: 1,
+          status: 1,
+          items: { $objectToArray: "$items" },
+        },
+      },
+      { $unwind: "$items" },
+      {
+        $project: {
+          customerId: 1,
+          totalAmount: 1,
+          status: 1,
+          // phải compare ObjectID với ObjectID.
+          itemId: { $toObjectId: "$items.k" },
+          quantity: "$items.v",
+        },
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "itemId",
+          foreignField: "_id",
+          as: "productDetails",
+        },
+      },
+      { $unwind: "$productDetails" },
+      {
+        $project: {
+          customerId: 1,
+          totalAmount: 1,
+          status: 1,
+          item: {
+            name: "$productDetails.name",
+            image: "$productDetails.image",
+            quantity: "$quantity",
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            customerId: "$customerId",
+            totalAmount: "$totalAmount",
+            status: "$status",
+          },
+          items: { $push: "$item" },
+        },
+      },
+    ]);
 
     // SEND RESPONSE
     if (data.length > 0) {
       res.status(200).json({
         status: "success",
-        data
+        data,
       });
     } else {
       res.status(200).json({
@@ -30,9 +73,80 @@ exports.viewOrder = async (req, res) => {
     res.status(500).json(err.message);
   }
 };
+
+
 exports.viewOrderAdmin = async (req, res) => {
   try {
-    const data = await order.find();
+    const data = await order.aggregate([
+      {
+        $project: {
+          _id: 0,
+          customerId: 1,
+          totalAmount: 1,
+          status: 1,
+          items: { $objectToArray: "$items" },
+        },
+      },
+      { $unwind: "$items" },
+      {
+        $project: {
+          customerId: 1,
+          totalAmount: 1,
+          status: 1,
+          itemId: { $toObjectId: "$items.k" },
+          quantity: "$items.v",
+        },
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "itemId",
+          foreignField: "_id",
+          as: "productDetails",
+        },
+      },
+      { $unwind: "$productDetails" },
+      {
+        $project: {
+          customerId: 1,
+          totalAmount: 1,
+          status: 1,
+          item: {
+            name: "$productDetails.name",
+            image: "$productDetails.image",
+            quantity: "$quantity",
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            customerId: "$customerId",
+            totalAmount: "$totalAmount",
+            status: "$status",
+          },
+          items: { $push: "$item" },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id.customerId",
+          foreignField: "_id",
+          as: "userDetails",
+        },
+      },
+      { $unwind: "$userDetails" },
+      {
+        $project: {
+         
+          totalAmount: "$_id.totalAmount",
+          status: "$_id.status",
+          items: 1,
+          userName: "$userDetails.name",
+        },
+      },
+    ]);
     // SEND RESPONSE
     if (data.length > 0) {
       res.status(200).json({
@@ -49,6 +163,7 @@ exports.viewOrderAdmin = async (req, res) => {
     res.status(500).json({ err });
   }
 };
+
 exports.createOrder = async (req, res) => {
   try {
     await order.create({
