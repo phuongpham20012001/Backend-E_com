@@ -66,7 +66,8 @@ app.all("*", (req, res, next) => {
   next(err);
 });
 
-const port = process.env.PORT || 8001;
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+// const port = process.env.PORT || 8001;
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`);
+// });
+module.exports = app;
