@@ -28,7 +28,6 @@ mongoose
     console.log("DB connected");
   });
 //MIDDLEWARE
-
 app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json({limit: '100mb'}));
