@@ -133,7 +133,7 @@ exports.forgotPassword = async (req, res, next) => {
 
     // send it to user's email
     // change the link to URL of front end
-    const resetURL = `https://shy-rose-tick-ring.cyclic.app/resetPassword/${resetToken}`;
+    const resetURL = `https://front-end-e-com-git-main-phuongpham20012001.vercel.app/resetPassword/${resetToken}`;
 
     const message = `Your link to reset password, ${resetURL}`;
     try {
