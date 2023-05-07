@@ -133,7 +133,7 @@ exports.forgotPassword = async (req, res, next) => {
 
     // send it to user's email
     // change the link to URL of front end
-    const resetURL = `http://localhost:3000/resetPassword/${resetToken}`;
+    const resetURL = `https://shy-rose-tick-ring.cyclic.app/resetPassword/${resetToken}`;
 
     const message = `Your link to reset password, ${resetURL}`;
     try {
