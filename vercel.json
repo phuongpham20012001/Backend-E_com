@@ -1,13 +1,12 @@
 {
-    "routes": [
-        {
-          "src": "/(.*)",
-          "method": [
-            "GET",
-            "POST",
-            "DELETE"
-          ],
-          "dest": "server.js"
-        }
-    ]
+    "functions": {
+      "api/server.js": {
+        "memory": 3008,
+        "maxDuration": 30
+      },
+      "api/*.js": {
+        "memory": 3008,
+        "maxDuration": 30
+      }
+    }
   }
