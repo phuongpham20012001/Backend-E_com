@@ -59,11 +59,11 @@ app.use("/", adminRouters);
 app.use("/", orderRouters);
 app.use("/", productRouters);
 // handle un unhanlded routes
-app.all("*", (req, res, next) => {
-  const err = new Error(`Can't find ${req.originalUrl} on this server`);
-  err.status = "fail";
-  err.statusCode = 404;
-  next(err);
+app.use((req, res, next) => {
+  res.status(404).json({
+    status: "fail",
+    message: `Can't find ${req.originalUrl} on this server`,
+  });
 });
 
 const port = process.env.PORT || 8001;
