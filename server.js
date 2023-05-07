@@ -11,7 +11,6 @@ const xss = require("xss-clean");
 const mongoSanitize = require("express-mongo-sanitize");
 const userRouters = require("./routes/userRouters");
 const hpp = require("hpp");
-const adminRouters = require("./routes/adminRouters");
 const orderRouters = require("./routes/orderRouters");
 const productRouters = require("./routes/productRouters");
 // MgDb connect
@@ -55,7 +54,6 @@ app.use((req, res, next) => {
 
 // ROUTES MIDDLEWARE
 app.use("/", userRouters);
-app.use("/", adminRouters);
 app.use("/", orderRouters);
 app.use("/", productRouters);
 // handle un unhanlded routes
