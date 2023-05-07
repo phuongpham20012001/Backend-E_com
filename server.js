@@ -28,6 +28,7 @@ mongoose
     console.log("DB connected");
   });
 //MIDDLEWARE
+
 app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json({limit: '100mb'}));
@@ -47,17 +48,17 @@ const limiter = rateLimit({
   windowMS: 60 * 60 * 1000,
   message: "Too many requests from this IP, please try again in an hour",
 });
-app.use("/", limiter);
+app.use("/api", limiter);
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
 
 // ROUTES MIDDLEWARE
-app.use("/", userRouters);
-app.use("/", adminRouters);
-app.use("/", orderRouters);
-app.use("/", productRouters);
+app.use("/api", userRouters);
+app.use("/api", adminRouters);
+app.use("/api", orderRouters);
+app.use("/api", productRouters);
 // handle un unhanlded routes
 app.all("*", (req, res, next) => {
   const err = new Error(`Can't find ${req.originalUrl} on this server`);

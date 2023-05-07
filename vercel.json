@@ -1,0 +1,13 @@
+{
+    "routes": [
+        {
+          "src": "/(.*)",
+          "method": [
+            "GET",
+            "POST",
+            "DELETE"
+          ],
+          "dest": "server.js"
+        }
+    ]
+  }
